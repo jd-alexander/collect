@@ -215,89 +215,67 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         });
 
         reloadLocation.setEnabled(false);
-        reloadLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (marker != null) {
-                    marker.remove();
-                }
-                latLng = null;
-                marker = null;
-                setClear = false;
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                markerOptions.position(latLng);
-                if (marker == null) {
-                    marker = map.addMarker(markerOptions);
-                    if (draggable && !readOnly) {
-                        marker.setDraggable(true);
-                    }
-                }
-                captureLocation = true;
-                isDragged = false;
-                zoomToPoint();
+        reloadLocation.setOnClickListener(v -> {
+            if (marker != null) {
+                marker.remove();
             }
+            latLng = null;
+            marker = null;
+            setClear = false;
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            markerOptions.position(latLng);
+            if (marker == null) {
+                marker = map.addMarker(markerOptions);
+                if (draggable && !readOnly) {
+                    marker.setDraggable(true);
+                }
+            }
+            captureLocation = true;
+            isDragged = false;
+            zoomToPoint();
         });
 
         // Focuses on marked location
         //showLocation.setClickable(false);
         showLocation.setEnabled(false);
-        showLocation.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showZoomDialog();
-            }
-        });
+        showLocation.setOnClickListener(v -> showZoomDialog());
 
         // Menu Layer Toggle
         ImageButton layers = findViewById(R.id.layer_menu);
-        layers.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                helper.showLayersDialog(GeoPointMapActivity.this);
-            }
-        });
+        layers.setOnClickListener(v -> helper.showLayersDialog(GeoPointMapActivity.this));
         zoomDialogView = getLayoutInflater().inflate(R.layout.geopoint_zoom_dialog, null);
         zoomLocationButton = zoomDialogView.findViewById(R.id.zoom_location);
-        zoomLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                zoomToLocation();
-                zoomDialog.dismiss();
-            }
+        zoomLocationButton.setOnClickListener(v -> {
+            zoomToLocation();
+            zoomDialog.dismiss();
         });
 
         zoomPointButton = zoomDialogView.findViewById(R.id.zoom_point);
-        zoomPointButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                zoomToPoint();
-                zoomDialog.dismiss();
-            }
+        zoomPointButton.setOnClickListener(v -> {
+            zoomToPoint();
+            zoomDialog.dismiss();
         });
 
         ImageButton clearPointButton = findViewById(R.id.clear);
-        clearPointButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (marker != null) {
-                    marker.remove();
-                }
-                if (location != null) {
-                    reloadLocation.setEnabled(true);
-                    // locationStatus.setVisibility(View.VISIBLE);
-                }
-                // reloadLocation.setEnabled(true);
-                locationInfo.setVisibility(View.VISIBLE);
-                locationStatus.setVisibility(View.VISIBLE);
-                latLng = null;
-                marker = null;
-                setClear = true;
-                isDragged = false;
-                captureLocation = false;
-                draggable = intentDraggable;
-                locationFromIntent = false;
-                overlayMyLocationLayers();
+        clearPointButton.setOnClickListener(v -> {
+            if (marker != null) {
+                marker.remove();
             }
+            if (location != null) {
+                reloadLocation.setEnabled(true);
+                // locationStatus.setVisibility(View.VISIBLE);
+            }
+            // reloadLocation.setEnabled(true);
+            locationInfo.setVisibility(View.VISIBLE);
+            locationStatus.setVisibility(View.VISIBLE);
+            latLng = null;
+            marker = null;
+            setClear = true;
+            isDragged = false;
+            captureLocation = false;
+            draggable = intentDraggable;
+            locationFromIntent = false;
+            overlayMyLocationLayers();
         });
 
         Intent intent = getIntent();
@@ -476,17 +454,10 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.zoom_to_where));
             builder.setView(zoomDialogView)
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            dialog.cancel();
-                            zoomDialog.dismiss();
-                        }
+                    .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel())
+                    .setOnCancelListener(dialog -> {
+                        dialog.cancel();
+                        zoomDialog.dismiss();
                     });
             zoomDialog = builder.create();
         }
@@ -522,20 +493,16 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
         alertDialogBuilder.setMessage(getString(R.string.gps_enable_message))
                 .setCancelable(false)
                 .setPositiveButton(getString(R.string.enable_gps),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivityForResult(
-                                        new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-                                errorDialog = null;
-                            }
+                        (dialog, id) -> {
+                            startActivityForResult(
+                                    new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+                            errorDialog = null;
                         });
 
         alertDialogBuilder.setNegativeButton(getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        errorDialog = null;
-                    }
+                (dialog, id) -> {
+                    dialog.cancel();
+                    errorDialog = null;
                 });
 
         errorDialog = alertDialogBuilder.create();
