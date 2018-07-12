@@ -14,13 +14,14 @@
 
 package org.odk.collect.android.widgets;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -31,6 +32,8 @@ import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
+
+import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
 
@@ -107,6 +110,21 @@ public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult barcodeScannerResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (barcodeScannerResult != null) {
+            if (barcodeScannerResult.getContents() == null) {
+                // request was canceled...
+                Timber.i("QR code scanning cancelled");
+            } else {
+                String sb = data.getStringExtra("SCAN_RESULT");
+                setBinaryData(sb);
+                saveAnswersForCurrentScreen();
+            }
+        }
+    }
+
+    @Override
     public void onButtonClick(int buttonId) {
         requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
             @Override
@@ -116,9 +134,7 @@ public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
                         .logInstanceAction(this, "recordBarcode", "click",
                                 getFormEntryPrompt().getIndex());
 
-                waitForData();
-
-                new IntentIntegrator((Activity) getContext())
+                IntentIntegrator.forSupportFragment(getAuxFragment())
                         .setCaptureActivity(ScannerWithFlashlightActivity.class)
                         .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
                         .setOrientationLocked(false)
