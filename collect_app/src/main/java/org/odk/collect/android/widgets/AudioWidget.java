@@ -236,7 +236,7 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
         if (requestCode == RequestCodes.AUDIO_CAPTURE) {
             saveFileAnswer(data.getData());
         } else if (requestCode == RequestCodes.AUDIO_CHOOSER) {
-            saveChosenFileInBackground(data.getData());
+            saveChosenFile(data.getData());
         }
     }
 

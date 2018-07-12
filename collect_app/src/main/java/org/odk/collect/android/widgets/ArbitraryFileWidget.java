@@ -143,7 +143,7 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ApplicationConstants.RequestCodes.VIDEO_CHOOSER) {
-            saveChosenFileInBackground(data.getData());
+            saveChosenFile(data.getData());
         }
     }
 
