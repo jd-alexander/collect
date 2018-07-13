@@ -50,6 +50,8 @@ import java.text.DecimalFormat;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
+
 /**
  * Version of the GeoPointMapActivity that uses the new Maps v2 API and Fragments to enable
  * specifying a location via placing a tracker on a map.
@@ -78,7 +80,7 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
     private boolean isDragged;
     private ImageButton showLocation;
 
-    private int locationCount = 0;
+    private int locationCount;
 
     private MapHelper helper;
     //private KmlLayer kk;
@@ -104,8 +106,13 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        if (!checkIfLocationPermissionsGranted(this)) {
+            finish();
+            return;
+        }
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         if (savedInstanceState != null) {
             locationCount = savedInstanceState.getInt(LOCATION_COUNT);
@@ -241,7 +248,7 @@ public class GeoPointMapActivity extends CollectAbstractActivity implements OnMa
 
         // Menu Layer Toggle
         ImageButton layers = findViewById(R.id.layer_menu);
-        layers.setOnClickListener(v -> helper.showLayersDialog(this));
+        layers.setOnClickListener(v -> helper.showLayersDialog());
         zoomDialogView = getLayoutInflater().inflate(R.layout.geo_zoom_dialog, null);
         zoomLocationButton = zoomDialogView.findViewById(R.id.zoom_location);
         zoomLocationButton.setOnClickListener(v -> {
