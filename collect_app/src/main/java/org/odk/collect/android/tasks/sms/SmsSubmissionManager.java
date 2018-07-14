@@ -14,7 +14,6 @@ import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 
 import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class SmsSubmissionManager implements SmsSubmissionManagerContract {
@@ -150,16 +149,5 @@ public class SmsSubmissionManager implements SmsSubmissionManagerContract {
         model.setMessages(list);
         model.setLastUpdated(new Date());
         saveSubmission(model);
-    }
-
-    public void deferSubmissionStatus(Iterator<String> instanceIds) {
-
-        while (instanceIds.hasNext()) {
-            SmsSubmission model = getSubmissionModel(instanceIds.next());
-            if (model != null) {
-                model.setStatusDeferred(true);
-                saveSubmission(model);
-            }
-        }
     }
 }

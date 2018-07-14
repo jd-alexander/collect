@@ -29,6 +29,7 @@ import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public abstract class InstanceUploader extends AsyncTask<Long, Integer, Instance
                     Iterator<String> it = keys.iterator();
                     int count = keys.size();
 
-                    submissionManager.deferSubmissionStatus(keys.iterator());
+                    deferSubmissionStatus(keys.iterator());
 
                     while (count > 0) {
                         String[] selectionArgs;
@@ -163,6 +164,17 @@ public abstract class InstanceUploader extends AsyncTask<Long, Integer, Instance
     public void setUploaderListener(InstanceUploaderListener sl) {
         synchronized (this) {
             stateListener = sl;
+        }
+    }
+
+    private void deferSubmissionStatus(Iterator<String> instanceIds) {
+
+        while (instanceIds.hasNext()) {
+            SmsSubmission model = submissionManager.getSubmissionModel(instanceIds.next());
+            if (model != null) {
+                model.setStatusDeferred(true);
+                submissionManager.saveSubmission(model);
+            }
         }
     }
 
