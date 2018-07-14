@@ -18,6 +18,7 @@ public class SmsSubmission {
     private Date lastUpdated;
     private int jobId;
     private String displayName;
+    private boolean statusDeferred;
 
     public Date getLastUpdated() {
         return lastUpdated;
@@ -127,5 +128,18 @@ public class SmsSubmission {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    /**
+     * Checks to see if the statusDeferred flag is set which means this submission was sent via
+     * internet and this submission should be deferred until another SMS submission is made.
+     * @return statusDeferred
+     */
+    public boolean isStatusDeferred() {
+        return statusDeferred;
+    }
+
+    public void setStatusDeferred(boolean statusDeferred) {
+        this.statusDeferred = statusDeferred;
     }
 }
