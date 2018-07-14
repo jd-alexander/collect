@@ -88,14 +88,14 @@ public class InstanceUploaderAdapter extends CursorAdapter {
 
         SmsSubmission model = submissionManager.getSubmissionModel(String.valueOf(instanceId));
 
-        boolean isSmsSubmission = model != null;
+        boolean displaySmsStatus = model != null && !model.isStatusDeferred();
 
         String status = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
 
         switch (status) {
 
             case STATUS_SUBMISSION_FAILED:
-                if (isSmsSubmission) {
+                if (displaySmsStatus) {
                     viewHolder.statusIcon.setImageResource(R.drawable.message_alert);
                 } else {
                     viewHolder.statusIcon.setImageResource(R.drawable.exclamation);
@@ -110,7 +110,7 @@ public class InstanceUploaderAdapter extends CursorAdapter {
                 viewHolder.statusIcon.setImageResource(R.drawable.pencil);
         }
 
-        if (isSmsSubmission) {
+        if (displaySmsStatus) {
             viewHolder.progressBar.setProgressPercent((int) model.getCompletion().getPercentage(), false);
         } else {
             if (status.equals(STATUS_SUBMITTED)) {
@@ -120,7 +120,7 @@ public class InstanceUploaderAdapter extends CursorAdapter {
             }
         }
 
-        if (isSmsSubmission) {
+        if (displaySmsStatus) {
             int smsStatus = submissionManager.checkNextMessageResultCode(String.valueOf(instanceId));
 
             setSmsSubmissionStateIcons(smsStatus, viewHolder);
