@@ -188,6 +188,13 @@ public class SmsService {
                 }
             }
 
+            /*
+             * If the submission's status was deferred by use of Aggregate/Google submissions then it should
+             * be re-enabled since SMS submission will be the latest.
+             */
+            model.setStatusDeferred(false);
+            smsSubmissionManager.saveSubmission(model);
+
             for (Message message : model.getMessages()) {
 
                 /*
