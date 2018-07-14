@@ -28,6 +28,7 @@ import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.AUTO_DELETE;
@@ -43,6 +46,13 @@ import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.AUT
 public abstract class InstanceUploader extends AsyncTask<Long, Integer, InstanceUploader.Outcome> {
 
     private InstanceUploaderListener stateListener;
+
+    @Inject
+    SmsSubmissionManagerContract submissionManager;
+
+    InstanceUploader() {
+        Collect.getInstance().getComponent().inject(this);
+    }
 
     @Override
     protected void onPostExecute(Outcome outcome) {
@@ -56,6 +66,9 @@ public abstract class InstanceUploader extends AsyncTask<Long, Integer, Instance
                     Set<String> keys = outcome.messagesByInstanceId.keySet();
                     Iterator<String> it = keys.iterator();
                     int count = keys.size();
+
+                    submissionManager.deferSubmissionStatus(keys.iterator());
+
                     while (count > 0) {
                         String[] selectionArgs;
                         if (count > ApplicationConstants.SQLITE_MAX_VARIABLE_NUMBER - 1) {

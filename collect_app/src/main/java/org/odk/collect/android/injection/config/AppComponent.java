@@ -8,6 +8,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.injection.ActivityBuilder;
 import org.odk.collect.android.injection.config.scopes.PerApplication;
+import org.odk.collect.android.tasks.InstanceUploader;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsSender;
@@ -55,4 +56,6 @@ public interface AppComponent {
     void inject(InstanceUploaderAdapter instanceUploaderAdapter);
 
     void inject(DataManagerList dataManagerList);
+
+    void inject(InstanceUploader instanceUploader);
 }
