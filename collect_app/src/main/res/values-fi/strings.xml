@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <string name="show_password">Näytä salasana</string>
   <string name="activity_not_found">Ei toimintoa tunnuksella: %s</string>
   <string name="view_image">Katso kuva</string>
@@ -57,7 +57,6 @@
   <string name="enter_data">Täytä tyhjä lomake</string>
   <string name="enter_data_button">Täytä tyhjä lomake</string>
   <string name="error_occured">Virhe</string>
-  <string name="error_attaching_binary_file">Virhe liittäessä mediaa %s </string>
   <string name="fetching_file">Haetaan %1$s.\n\nLomake %2$s / %3$s.</string>
   <string name="file_deleted_error">Pahoittelut, poistaminen epäonnistui %1$s / %2$s valitun lomakkeen kohdalla!</string>
   <string name="file_deleted_ok">%s lomakkeen poistaminen onnistui!</string>
