@@ -26,6 +26,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,6 +54,7 @@ import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.database.ActivityLogger;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.listeners.AudioPlayListener;
@@ -60,7 +62,6 @@ import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GuidanceHint;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.tasks.ChosenFileSaver;
 import org.odk.collect.android.utilities.ActivityResultHelper;
 import org.odk.collect.android.utilities.AnimateUtils;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -87,6 +88,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -116,12 +123,14 @@ public abstract class QuestionWidget
     private AtomicBoolean expanded;
     private Bundle state;
     private int playColor;
+    private CompositeDisposable disposables;
 
     public QuestionWidget(Context context, FormEntryPrompt prompt) {
         super(context);
 
         themeUtils = new ThemeUtils(context);
         playColor = themeUtils.getAccentColor();
+        disposables = new CompositeDisposable();
 
         if (context instanceof FormEntryActivity) {
             state = ((FormEntryActivity) context).getState();
@@ -816,29 +825,51 @@ public abstract class QuestionWidget
         // show dialog
         ((FormEntryActivity) getContext()).showDialog(SAVING_DIALOG);
 
-        ChosenFileSaver.createObservable(getContext(), selectedFile)
-                .doOnNext(saveResult -> {
-                    if (saveResult.isComplete() && this instanceof BinaryWidget) {
-                        if (this instanceof BaseImageWidget || this instanceof ImageWebViewWidget) {
-                            ImageConverter.execute(saveResult.getSavedFile().getPath(), this, getContext());
-                        }
-                        ((BinaryWidget) this).setBinaryData(saveResult.getSavedFile());
-                        saveAnswersForCurrentScreen();
-                    } else {
-                        ToastUtils.showShortToastInMiddle(saveResult.getErrorMessageRes());
+        saveFile(getContext(), selectedFile)
+                .subscribe(new SingleObserver<File>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+                        disposables.add(disposable);
                     }
-                })
-                .doOnComplete(() -> {
-                    // dismiss dialog
-                    ((FormEntryActivity) getContext()).dismissDialog(SAVING_DIALOG);
-                })
-                .doOnError(throwable -> {
-                    // dismiss dialog
-                    ((FormEntryActivity) getContext()).dismissDialog(SAVING_DIALOG);
-                    Timber.e(throwable);
-                })
-                .subscribe();
+
+                    @Override
+                    public void onSuccess(File file) {
+                        QuestionWidget widget = QuestionWidget.this;
+                        if (widget instanceof BinaryWidget) {
+                            if (widget instanceof BaseImageWidget || widget instanceof ImageWebViewWidget) {
+                                ImageConverter.execute(file.getPath(), QuestionWidget.this, getContext());
+                            }
+                            ((BinaryWidget) widget).setBinaryData(file);
+                            saveAnswersForCurrentScreen();
+                            ((FormEntryActivity) getContext()).dismissDialog(SAVING_DIALOG);
+                            refreshCurrentView();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ((FormEntryActivity) getContext()).dismissDialog(SAVING_DIALOG);
+                        Timber.e(e);
+                    }
+                });
     }
+
+    private Single<File> saveFile(Context context, Uri selectedFile) {
+
+        return Single.fromCallable(() -> {
+            FormController formController = Collect.getInstance().getFormController();
+
+            String extension = ContentResolverHelper.getFileExtensionFromUri(context, selectedFile);
+            String instanceFolder = formController.getInstanceFile().getParent();
+            String destPath = instanceFolder + File.separator + System.currentTimeMillis() + extension;
+
+            File chosenFile = MediaUtils.getFileFromUri(context, selectedFile, MediaStore.Images.Media.DATA);
+            File file = new File(destPath);
+            Timber.d(FileUtils.copyFile(chosenFile, file));
+            return file;
+        });
+    }
+
 
     protected void refreshCurrentView() {
         ((FormEntryActivity) getContext()).refreshCurrentView();
