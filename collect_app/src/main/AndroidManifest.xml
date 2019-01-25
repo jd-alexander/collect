@@ -252,7 +252,7 @@ the specific language governing permissions and limitations under the License.
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI" />
+            android:value="AIzaSyDcAhLfeAbY-01r_t4UNNmHA3R0mlK--0I" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"
@@ -273,5 +273,8 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.WebViewActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ff9ea6a4e73185a70a3cea189a6698ebe5076b04" />
     </application>
 </manifest>
