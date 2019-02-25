@@ -96,7 +96,7 @@
     <string name="location_provider_accuracy">Using %1$s. Accuracy is %2$s m.</string>
     <string name="location_accuracy">Accuracy is %1$s m</string>
     <string name="main_menu">Main Menu</string>
-    <string name="main_menu_details">Data collection made easier…</string>
+    <string name="main_menu_details">Data when you need it</string>
     <string name="manage_files">Delete Saved Form</string>
     <string name="mark_finished">Mark form as finalized</string>
     <string name="noselect_error">Sorry, you have not selected any forms!</string>
@@ -180,7 +180,7 @@
     <string name="save_as_error">Saved name must not be blank!</string>
     <string name="edit_prompt">Edit Prompt</string>
     <string name="selected_google_account_text">Google account</string>
-    <string name="server_platform_odk_aggregate">Nobi Aggregate</string>
+    <string name="server_platform_odk_aggregate">Nobi Forms Server</string>
     <string name="server_platform_other">Other</string>
     <string name="font_size_extra_large">Extra Large</string>
     <string name="font_size_large">Large</string>
