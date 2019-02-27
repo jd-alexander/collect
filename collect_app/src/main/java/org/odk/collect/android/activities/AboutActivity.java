@@ -42,8 +42,8 @@ public class AboutActivity extends CollectAbstractActivity implements
 
     private static final String LICENSES_HTML_PATH = "file:///android_asset/open_source_licenses.html";
     private static final String GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=";
-    private static final String ODK_WEBSITE = "https://opendatakit.org";
-    private static final String ODK_FORUM = "https://forum.opendatakit.org";
+    private static final String NOBI_WEBSITE = "https://nobiforms.com";
+    private static final String NOBI_FORUM = "https://nobiforms.com/support";
 
     private CustomTabHelper websiteTabHelper;
     private CustomTabHelper forumTabHelper;
@@ -73,8 +73,8 @@ public class AboutActivity extends CollectAbstractActivity implements
         websiteTabHelper = new CustomTabHelper();
         forumTabHelper = new CustomTabHelper();
 
-        websiteUri = Uri.parse(ODK_WEBSITE);
-        forumUri = Uri.parse(ODK_FORUM);
+        websiteUri = Uri.parse(NOBI_WEBSITE);
+        forumUri = Uri.parse(NOBI_FORUM);
     }
 
     private void initToolbar() {
