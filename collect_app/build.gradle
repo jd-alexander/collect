@@ -259,6 +259,7 @@ dependencies {
     implementation "com.google.zxing:core:3.3.0"
     implementation "com.journeyapps:zxing-android-embedded:3.5.0"
     implementation "net.danlew:android.joda:2.9.9"
+    implementation 'info.hoang8f:fbutton:1.0.5'
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${rootProject.leakyCanaryVersion}"

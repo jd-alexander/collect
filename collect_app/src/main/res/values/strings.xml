@@ -408,7 +408,7 @@
     <string name="version_number">Version: %s</string>
     <string name="id_number">ID: %s</string>
     <string name="odk_website">Visit the Nobi website</string>
-    <string name="odk_website_summary">Nobi Forms is used to collect data for social good in challenging environments.</string>
+    <string name="odk_website_summary">Nobi Forms is a dynamic mobile form solution that revolutionizes how data is collected and analyzed within an organization. </string>
     <string name="odk_forum">Join the Nobi Forms forum</string>
     <string name="odk_forum_summary">Join the forum to get support, request features, contribute code/translations! </string>
     <string name="all_open_source_licenses">Open source libraries/licenses</string>
