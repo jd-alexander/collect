@@ -7,10 +7,10 @@
         android:entryValues="@array/theme_entry_values"
         android:key="appTheme"
         android:title="@string/app_theme" />
-    <ListPreference
+  <!--  <ListPreference
         android:dialogTitle="@string/language"
         android:key="app_language"
-        android:title="@string/language" />
+        android:title="@string/language" />-->
     <ListPreference
         android:dialogTitle="@string/change_font_size"
         android:entries="@array/font_size_entries"

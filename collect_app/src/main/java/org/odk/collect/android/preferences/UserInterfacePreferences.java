@@ -66,7 +66,7 @@ public class UserInterfacePreferences extends BasePreferenceFragment {
         initThemePrefs();
         initNavigationPrefs();
         initFontSizePref();
-        initLanguagePrefs();
+       // initLanguagePrefs();
         initSplashPrefs();
         initMapPrefs();
     }
