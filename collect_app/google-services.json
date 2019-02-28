@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:998738205327:android:5e1d7c3c296329e8",
+        "mobilesdk_app_id": "1:998738205327:android:cd6760aeb27e0ae0",
         "android_client_info": {
-          "package_name": "org.odk.collect.android"
+          "package_name": "org.nobi.forms.android"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "998738205327-8irppa2bt7tuj7klehthldv9dnnlmlll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.nobi.forms.android",
+            "certificate_hash": "010176d9e4a7dec8faded7e0489d026545cfb8c1"
+          }
+        },
         {
           "client_id": "998738205327-542vjnuuq4918s7rks4van25tjsok64m.apps.googleusercontent.com",
           "client_type": 3
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998738205327-542vjnuuq4918s7rks4van25tjsok64m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
