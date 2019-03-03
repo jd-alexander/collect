@@ -30,6 +30,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -66,6 +67,7 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 import static org.nobi.forms.android.logic.PropertyManager.PROPMGR_USERNAME;
@@ -226,6 +228,14 @@ public class Collect extends Application implements HasActivityInjector {
     public void onCreate() {
         super.onCreate();
         singleton = this;
+
+        // Set up Crashlytics, disabled for debug builds
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+
+        // Initialize Fabric with the debug-disabled crashlytics.
+        Fabric.with(this, crashlyticsKit);
 
         applicationComponent = DaggerAppComponent.builder()
                 .application(this)
